@@ -1,0 +1,152 @@
+class Song:
+    def __init__(self, title, artist, album, duration):
+        self.title = title
+        self.artist = artist
+        self.album = album
+        self.duration = duration
+        self.rating = 0
+        self.reviews = []
+
+    def rate(self, rating):
+        self.rating = rating
+
+    def add_review(self, review):
+        self.reviews.append(review)
+
+class Artist:
+    def __init__(self, name):
+        self.name = name
+        self.albums = []
+
+    def add_album(self, album):
+        self.albums.append(album)
+
+class Album:
+    def __init__(self, title, artist, release_year):
+        self.title = title
+        self.artist = artist
+        self.release_year = release_year
+        self.songs = []
+        self.rating = 0
+        self.reviews = []
+
+    def add_song(self, song):
+        self.songs.append(song)
+
+    def rate(self, rating):
+        self.rating = rating
+
+    def add_review(self, review):
+        self.reviews.append(review)
+
+class Playlist:
+    def __init__(self, name):
+        self.name = name
+        self.songs = []
+
+    def add_song(self, song):
+        self.songs.append(song)
+
+    def remove_song(self, song_title):
+        self.songs = [song for song in self.songs if song.title != song_title]
+
+    def display(self):
+        print(f"Playlist: {self.name}")
+        for song in self.songs:
+            print(f"Title: {song.title}, Artist: {song.artist}, Album: {song.album}, Duration: {song.duration}")
+
+class MusicLibrary:
+    def __init__(self):
+        self.songs = []
+        self.artists = []
+        self.albums = []
+        self.playlists = []
+
+    def add_song(self, song):
+        self.songs.append(song)
+
+    def add_artist(self, artist):
+        self.artists.append(artist)
+
+    def add_album(self, album):
+        self.albums.append(album)
+
+    def create_playlist(self, name):
+        playlist = Playlist(name)
+        self.playlists.append(playlist)
+        return playlist
+
+    def search_songs(self, title=None, artist=None, album=None):
+        results = self.songs
+        if title:
+            results = [song for song in results if title.lower() in song.title.lower()]
+        if artist:
+            results = [song for song in results if artist.lower() in song.artist.lower()]
+        if album:
+            results = [song for song in results if album.lower() in song.album.lower()]
+        return results
+
+    def search_artists(self, name):
+        return [artist for artist in self.artists if name.lower() in artist.name.lower()]
+
+    def search_albums(self, title):
+        return [album for album in self.albums if title.lower() in album.title.lower()]
+
+# Example usage
+if __name__ == "__main__":
+    library = MusicLibrary()
+
+    # Create some artists
+    artist1 = Artist("Artist One")
+    artist2 = Artist("Artist Two")
+
+    # Add artists to the library
+    library.add_artist(artist1)
+    library.add_artist(artist2)
+
+    # Create some albums
+    album1 = Album("Album One", artist1.name, 2020)
+    album2 = Album("Album Two", artist2.name, 2021)
+
+    # Add albums to the library
+    library.add_album(album1)
+    library.add_album(album2)
+
+    # Add albums to artists
+    artist1.add_album(album1)
+    artist2.add_album(album2)
+
+    # Create some songs
+    song1 = Song("Song One", artist1.name, album1.title, "3:30")
+    song2 = Song("Song Two", artist2.name, album2.title, "4:00")
+
+    # Add songs to the library
+    library.add_song(song1)
+    library.add_song(song2)
+
+    # Add songs to albums
+    album1.add_song(song1)
+    album2.add_song(song2)
+
+    # Create a playlist
+    playlist = library.create_playlist("My Playlist")
+    playlist.add_song(song1)
+    playlist.add_song(song2)
+
+    # Display playlist
+    playlist.display()
+
+    # Search for a song by title
+    results = library.search_songs(title="Song One")
+    for song in results:
+        print(f"Found song: {song.title} by {song.artist}")
+
+    # Rate and review a song
+    song1.rate(5)
+    song1.add_review("Great song!")
+    print(f"Song: {song1.title}, Rating: {song1.rating}, Reviews: {song1.reviews}")
+
+    # Rate and review an album
+    album1.rate(4)
+    album1.add_review("Great album!")
+    print(f"Album: {album1.title}, Rating: {album1.rating}, Reviews: {album1.reviews}")
